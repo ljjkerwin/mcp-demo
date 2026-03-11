@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "pm2": "pm2 delete mcp-demo 2>/dev/null; pm2 start pnpm --name mcp-demo -- start",
     "start": "tsx index.ts",
     "stdio": "tsx stdio.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
