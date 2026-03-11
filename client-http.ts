@@ -1,11 +1,10 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 
 async function main() {
-  const transport = new StdioClientTransport({
-    command: "npx",
-    args: ["tsx", "stdio.ts"],
-  });
+  const transport = new SSEClientTransport(
+    new URL("http://localhost:3001/sse")
+  );
 
   const client = new Client(
     {

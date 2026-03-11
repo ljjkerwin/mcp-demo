@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { predictFortune } from "./service.js";
+import predictFortune from "./services/predictFortune.js";
 
 // Create an MCP server
 const server = new McpServer({
@@ -11,14 +11,13 @@ const server = new McpServer({
 
 // Add the tool
 server.tool(
-  "predict-fortune",
-  "Predict today's fortune based on name and date",
+  "predict_fortune",
+  "测试今日运势",
   {
     name: z.string().describe("The name of the person"),
-    date: z.string().describe("The date for prediction (YYYY-MM-DD)"),
   },
-  async ({ name, date }) => {
-    const fortune = predictFortune(name, date);
+  async ({ name }) => {
+    const fortune = predictFortune(name);
     return {
       content: [
         {
