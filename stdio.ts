@@ -1,0 +1,43 @@
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
+import { predictFortune } from "./service.js";
+
+// Create an MCP server
+const server = new McpServer({
+  name: "fortune-teller",
+  version: "1.0.0",
+});
+
+// Add the tool
+server.tool(
+  "predict-fortune",
+  "Predict today's fortune based on name and date",
+  {
+    name: z.string().describe("The name of the person"),
+    date: z.string().describe("The date for prediction (YYYY-MM-DD)"),
+  },
+  async ({ name, date }) => {
+    const fortune = predictFortune(name, date);
+    return {
+      content: [
+        {
+          type: "text",
+          text: fortune,
+        },
+      ],
+    };
+  }
+);
+
+// Connect to transport
+async function main() {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.error("MCP Server running on stdio");
+}
+
+main().catch((error) => {
+  console.error("Server error:", error);
+  process.exit(1);
+});
